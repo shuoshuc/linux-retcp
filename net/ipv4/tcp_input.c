@@ -3598,6 +3598,11 @@ static int tcp_ack(struct sock *sk, const struct sk_buff *skb, int flag)
 			ack_ev_flags |= CA_ACK_ECE;
 		}
 
+		// let TCP CC see an ECE even if ECN is disabled
+		if (tcp_hdr(skb)->ece && !tcp_hdr(skb)->syn) {
+		  ack_ev_flags |= CA_ACK_ECE;
+		}
+
 		if (flag & FLAG_WIN_UPDATE)
 			ack_ev_flags |= CA_ACK_WIN_UPDATE;
 

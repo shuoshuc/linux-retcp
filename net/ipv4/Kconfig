@@ -675,6 +675,16 @@ config TCP_CONG_BBR
 	bufferbloat, policers, or AQM schemes that do not provide a delay
 	signal. It requires the fq ("Fair Queue") pacing packet scheduler.
 
+config TCP_CONG_RETCP
+	tristate "reTCP"
+	default n
+	---help---
+
+	ReTCP is a TCP variant designed for reconfigurable data center networks.
+	It dynamically adjusts its sending cwnd based on perceived ECN hints.
+	Please find more details in the NSDI20 paper:
+	https://www.usenix.org/conference/nsdi20/presentation/mukerjee.
+
 choice
 	prompt "Default TCP congestion control"
 	default DEFAULT_CUBIC
@@ -712,6 +722,9 @@ choice
 	config DEFAULT_BBR
 		bool "BBR" if TCP_CONG_BBR=y
 
+	config DEFAULT_RETCP
+		bool "reTCP" if TCP_CONG_RETCP=y
+
 	config DEFAULT_RENO
 		bool "Reno"
 endchoice
@@ -736,6 +749,7 @@ config DEFAULT_TCP_CONG
 	default "dctcp" if DEFAULT_DCTCP
 	default "cdg" if DEFAULT_CDG
 	default "bbr" if DEFAULT_BBR
+	default "retcp" if DEFAULT_RETCP
 	default "cubic"
 
 config TCP_MD5SIG
